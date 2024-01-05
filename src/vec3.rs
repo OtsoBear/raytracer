@@ -1,4 +1,6 @@
 use std::ops::{Index, IndexMut, Add, AddAssign, Sub, SubAssign, Mul, MulAssign, Div, DivAssign};
+use std::fmt;
+use std::fmt::Display;
 
 #[derive(Clone, Copy)]
 pub struct Vec3 {
@@ -109,5 +111,44 @@ impl DivAssign<f64> for Vec3 {
         *self = Vec3 {
             e: [self[0] / other, self[1] / other, self[2] / other]
         };
+    }
+}
+pub fn x(self) -> f64 {
+    self[0]
+}
+
+pub fn y(self) -> f64 {
+    self[1]
+}
+
+pub fn z(self) -> f64 {
+    self[2]
+}
+
+pub fn dot(self, other: Vec3) -> f64 {
+    self[0] * other[0] + self[1] * other[1] + self[2] * other[2]
+}
+
+pub fn length(self) -> f64 {
+    self.dot(self).sqrt()
+}
+
+pub fn cross(self, other: Vec3) -> Vec3 {
+    Vec3 {
+        e: [
+            self[1] * other[2] - self[2] * other[1],
+            self[2] * other[0] - self[0] * other[2],
+            self[0] * other[1] - self[1] * other[0]
+        ]
+    }
+}
+
+pub fn normalized(self) -> Vec3 {
+    self / self.length()
+}
+
+impl Display for Vec3 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({}, {}, {})", self[0], self[1], self[2])
     }
 }
