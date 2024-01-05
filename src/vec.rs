@@ -49,6 +49,11 @@ impl Vec3 {
     pub fn normalized(self) -> Vec3 {
         self / self.length()
     }
+    pub fn format_color(self) -> String {
+        format!("{} {} {}", (255.999 * self[0]) as u64,
+                            (255.999 * self[1]) as u64,
+                            (255.999 * self[2]) as u64)
+    }
 }
 
 

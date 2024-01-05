@@ -1,6 +1,8 @@
 mod vec;
 mod ray;
 
+use std::io::stderr;
+
 use vec::{Vec3, Point3, Color};
 use ray::Ray;
 

@@ -1,6 +1,6 @@
 use super::vec::{Vec3, Point3};
 
-struct Ray {
+pub struct Ray {
     orig: Point3,
     dir: Vec3
 }
