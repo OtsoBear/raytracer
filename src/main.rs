@@ -42,7 +42,7 @@ fn main() {
     // `lower_left_corner` is the position of the lower left corner of the viewport.
     // It is calculated by starting at the origin, moving half the viewport to the left, half the viewport down, and moving forward by the focal length.
     let lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
-    
+
     println!("P3");
     println!("{} {}", IMAGE_WIDTH, IMAGE_HEIGHT);
     println!("255");
@@ -54,9 +54,14 @@ fn main() {
         for i in 0..IMAGE_WIDTH {
             let u = (i as f64) / ((IMAGE_WIDTH - 1) as f64);
             let v = (j as f64) / ((IMAGE_HEIGHT - 1) as f64);
-
-            let r = Ray::new(origin,
-                             lower_left_corner + u * horizontal + v * vertical - origin);
+  
+   // Create a new Ray object.
+   // The origin of the ray is the camera position.
+   // The direction of the ray is calculated by adding the lower left corner of the viewport,
+   // the product of `u` and the horizontal vector, and the product of `v` and the vertical vector,
+   // and then subtracting the origin.
+   // This results in a ray that starts at the origin and passes through a specific point on the viewport.
+   let r = Ray::new(origin, lower_left_corner + u * horizontal + v * vertical - origin);
             let pixel_color = ray_color(&r);
 
             println!("{}", pixel_color.format_color());
