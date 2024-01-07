@@ -5,6 +5,7 @@ use std::io::stderr;
 
 use vec::{Vec3, Point3, Color};
 use ray::Ray;
+use std::io::Write;
 
 fn ray_color(r: &Ray) -> Color {
     let unit_direction = r.direction().normalized();

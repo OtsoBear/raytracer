@@ -56,13 +56,6 @@ impl Vec3 {
     }
 }
 
-
-impl Display for Vec3 {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "({}, {}, {})", self[0], self[1], self[2])
-    }
-}
-
 impl Index<usize> for Vec3 {
     type Output = f64;
 
@@ -131,7 +124,7 @@ impl MulAssign<f64> for Vec3 {
     }
 }
 
-impl Mul<vec3> for f64 {
+impl Mul<Vec3> for f64 {
     type Output = Vec3;
 
     fn mul(self, other: Vec3) -> Vec3 {
@@ -156,5 +149,11 @@ impl DivAssign<f64> for Vec3 {
         *self = Vec3 {
             e: [self[0] / other, self[1] / other, self[2] / other]
         };
+    }
+}
+
+impl Display for Vec3 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "({}, {}, {})", self[0], self[1], self[2])
     }
 }
