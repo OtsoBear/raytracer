@@ -7,9 +7,15 @@ use vec::{Vec3, Point3, Color};
 use ray::Ray;
 use std::io::Write;
 
+// Calculates the color of a ray in a ray tracing context.
 fn ray_color(r: &Ray) -> Color {
+    // The `unit_direction` is the normalized direction vector of the ray.
     let unit_direction = r.direction().normalized();
+    // `t` is calculated as half of the sum of the y-component of the `unit_direction` vector and 1.0.
     let t = 0.5 * (unit_direction.y() + 1.0);
+    // The color of the ray is calculated by performing a linear interpolation between white and light blue.
+    // The interpolation is based on the value of `t`. If `t` is 0, the color will be white, and if `t` is 1, the color will be light blue.
+    // For values of `t` between 0 and 1, the color will be a blend of white and light blue.
     (1.0 - t) * Color::new(1.0, 1.0, 1.0) + t * Color::new(0.5, 0.7, 1.0)
 }
 
@@ -24,12 +30,19 @@ fn main() {
     let viewport_width = ASPECT_RATIO * viewport_height;
     let focal_length = 1.0;
 
+    // `origin` is the starting point of the ray, typically the camera position, set to the origin of the coordinate system (0, 0, 0).
     let origin = Point3::new(0.0, 0.0, 0.0);
-    let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
-    let vertical = Vec3::new(0.0, viewport_height, 0.0);
-    let lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0
-                          - Vec3::new(0.0, 0.0, focal_length);
 
+    // `horizontal` is a vector representing the horizontal dimension of the viewport.
+    let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
+
+    // `vertical` is a vector representing the vertical dimension of the viewport.
+    let vertical = Vec3::new(0.0, viewport_height, 0.0);
+
+    // `lower_left_corner` is the position of the lower left corner of the viewport.
+    // It is calculated by starting at the origin, moving half the viewport to the left, half the viewport down, and moving forward by the focal length.
+    let lower_left_corner = origin - horizontal / 2.0 - vertical / 2.0 - Vec3::new(0.0, 0.0, focal_length);
+    
     println!("P3");
     println!("{} {}", IMAGE_WIDTH, IMAGE_HEIGHT);
     println!("255");
