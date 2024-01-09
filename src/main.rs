@@ -8,23 +8,28 @@ use ray::Ray;
 use std::io::Write;
 
 // Check if ray intersects a sphere
-fn hit_sphere(center: Point3, radius: f64, r: &Ray) -> bool {
+fn hit_sphere(center: Point3, radius: f64, r: &Ray) -> f64 {
     // The vector from the origin of the ray to the center of the sphere
     let oc = r.origin() - center;
-
     // The quadratic formula is used to check if the ray intersects the sphere.
     let a = r.direction().dot(r.direction());
     let b = 2.0 * oc.dot(r.direction());
     let c = oc.dot(oc) - radius * radius;
     let discriminant = b * b - 4.0 * a * c;
     // Whichever value the discrimant has, is the amount of points on the sphere intersected
-    discriminant > 0.0
+    if discriminant < 0.0 {
+        -1.0
+    } else {
+        (-b - discriminant.sqrt()) / (2.0 * a)
+    }
 }
 
 // Calculates the color of a ray in a ray tracing context.
 fn ray_color(r: &Ray) -> Color {
-    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, r) {
-        return Color::new(1.0, 0.0, 0.0);
+    let t = hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, r);
+    if t > 0.0 {
+        let n = (r.at(t) - Point3::new(0.0, 0.0, -1.0)).normalized();
+        return 0.5 * Color::new(n.x() + 1.0, n.y() + 1.0, n.z() + 1.0);
     }
 
     // The `unit_direction` is the normalized direction vector of the ray.
