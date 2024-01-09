@@ -1,20 +1,46 @@
-use super::vec::{Vec3, Point3};
-use super::ray::Ray;
+//use std::sync::Arc;
 
-/// Represents a record of a hit between a ray and a hittable object.
+use super::vec::{Point3, Vec3};
+use super::ray::Ray;
+//use super::material::Scatter;
+
 pub struct HitRecord {
-    /// The point of intersection between the ray and the object.
     pub p: Point3,
-    /// The surface normal at the point of intersection.
     pub normal: Vec3,
-    /// The parameter value along the ray where the hit occurred.
+    //pub mat: Arc<dyn Scatter>,
     pub t: f64,
+    pub front_face: bool
 }
 
-/// Trait representing an object that can be hit by a ray.
-pub trait Hit {
-    /// Determines if the ray intersects with the object within a given range of t-values.
+impl HitRecord {
+    pub fn set_face_normal(&mut self, r: &Ray, outward_normal: Vec3) -> () {
+        self.front_face = r.direction().dot(outward_normal) < 0.0;
+        self.normal = if self.front_face {
+            outward_normal
+        } else {
+            (-1.0) * outward_normal
+        };
+    }
+}
 
-    /// An optional hit record containing information about the intersection, or `None` if there is no intersection.
-    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<hitrecord>;
+pub type World = Vec<Box<dyn Hit>>;
+
+impl Hit for World {
+    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+        let mut tmp_rec = None;
+        let mut closest_so_far = t_max;
+
+        for object in self {
+            if let Some(rec) = object.hit(r, t_min, closest_so_far) {
+                closest_so_far = rec.t;
+                tmp_rec = Some(rec);
+            }
+        }
+        
+        tmp_rec
+    }
+}
+
+pub trait Hit : Send + Sync {
+    fn hit(&self, r: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
 }
