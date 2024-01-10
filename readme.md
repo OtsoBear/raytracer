@@ -7,9 +7,9 @@ This is a simple ray tracer implemented in Rust.
 
 The ray tracer calculates the color of each pixel in an image by tracing rays from the camera through the viewport and into the scene.
 
-### Example usage:
+### Example usage
 
-```
+```bash
 cargo run > image.ppm
 ```
 
