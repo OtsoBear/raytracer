@@ -9,7 +9,7 @@ The ray tracer calculates the color of each pixel in an image by tracing rays fr
 
 ### Example usage:
 
-```rust
+```
 cargo run > image.ppm
 ```
 
