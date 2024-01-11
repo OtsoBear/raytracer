@@ -3,7 +3,10 @@ mod ray;
 mod hit;
 mod sphere;
 mod camera;
+mod material;
+use std::sync::Arc;
 
+use material::{Lambertian, Metal};
 use std::io::{stderr, Write};
 use camera::Camera;
 use rand::Rng;
@@ -19,12 +22,11 @@ fn ray_color(r: &Ray, world: &World, depth: u64) -> Color {
     }
 
     if let Some(rec) = world.hit(r, 0.001, f64::INFINITY) {
-        //let target = rec.p + rec.normal + Vec3::random_in_unit_sphere().normalized();
-
-        //Alternative to lambertian diffuse
-        let target = rec.p + Vec3::random_in_hemisphere(rec.normal);
-        let r = Ray::new(rec.p, target - rec.p);
-        0.5 * ray_color(&r, world, depth - 1)
+        if let Some((attenuation, scattered)) = rec.mat.scatter(r, &rec) {
+            attenuation * ray_color(&scattered, world, depth - 1)
+        } else {
+            Color::new(0.0, 0.0, 0.0)
+        }
     } else {
         let unit_direction = r.direction().normalized();
         let t = 0.5 * (unit_direction.y() + 1.0);
@@ -41,8 +43,20 @@ fn main() {
     const MAX_DEPTH: u64 = 5;
     // World
     let mut world = World::new();
-    world.push(Box::new(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5)));
-    world.push(Box::new(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0)));
+    let mat_ground = Arc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
+    let mat_center = Arc::new(Lambertian::new(Color::new(0.7, 0.3, 0.3)));
+    let mat_left = Arc::new(Metal::new(Color::new(0.8, 0.8, 0.8)));
+    let mat_right = Arc::new(Metal::new(Color::new(0.8, 0.6, 0.2)));
+
+    let sphere_ground = Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, mat_ground);
+    let sphere_center = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, mat_center);
+    let sphere_left = Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mat_left);
+    let sphere_right = Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, mat_right);
+
+    world.push(Box::new(sphere_ground));
+    world.push(Box::new(sphere_center));
+    world.push(Box::new(sphere_left));
+    world.push(Box::new(sphere_right));
 
     // Camera
     let cam = Camera::new();

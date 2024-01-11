@@ -1,16 +1,17 @@
-//use std::sync::Arc;
+use std::sync::Arc;
 
 use super::vec::{Point3, Vec3};
 use super::ray::Ray;
-//use super::material::Scatter;
+use super::material::Scatter;
 
 pub struct HitRecord {
     pub p: Point3,
     pub normal: Vec3,
-    //pub mat: Arc<dyn Scatter>,
+    pub mat: Arc<dyn Scatter>,
     pub t: f64,
     pub front_face: bool
 }
+
 
 impl HitRecord {
     pub fn set_face_normal(&mut self, r: &Ray, outward_normal: Vec3) -> () {
