@@ -41,25 +41,33 @@ fn main() {
     const IMAGE_HEIGHT: u64 = ((IMAGE_WIDTH as f64) / ASPECT_RATIO) as u64;
     const SAMPLES_PER_PIXEL: u64 = 100;
     const MAX_DEPTH: u64 = 5;
-    // World
-    let mut world = World::new();
-    let mat_ground = Arc::new(material::Lambertian::new(Color::new(0.8, 0.8, 0.0)));
-    let mat_center = Arc::new(material::Dielectric::new(1.5));
-    let mat_left = Arc::new(material::Dielectric::new(1.5));
-    let mat_right = Arc::new(material::Metal::new(Color::new(0.8, 0.6, 0.2), 1.0));
+// World
+let mut world = World::new();
 
-    let sphere_ground = Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, mat_ground);
-    let sphere_center = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, mat_center);
-    let sphere_left = Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mat_left);
-    let sphere_right = Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, mat_right);
+let mat_ground = Arc::new(material::Lambertian::new(Color::new(0.8, 0.8, 0.0)));
+let mat_center = Arc::new(material::Lambertian::new(Color::new(0.1, 0.2, 0.5)));
+let mat_left = Arc::new(material::Dielectric::new(1.5));
+let mat_left_inner = Arc::new(material::Dielectric::new(1.5));
+let mat_right = Arc::new(material::Metal::new(Color::new(0.8, 0.6, 0.2), 1.0));
 
-    world.push(Box::new(sphere_ground));
-    world.push(Box::new(sphere_center));
-    world.push(Box::new(sphere_left));
-    world.push(Box::new(sphere_right));
+let sphere_ground = Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, mat_ground);
+let sphere_center = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, mat_center);
+let sphere_left = Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mat_left);
+let sphere_left_inner = Sphere::new(Point3::new(-1.0, 0.0, -1.0), -0.45, mat_left_inner);
+let sphere_right = Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, mat_right);
 
-    // Camera
-    let cam = Camera::new();
+world.push(Box::new(sphere_ground));    
+world.push(Box::new(sphere_center));
+world.push(Box::new(sphere_left));
+world.push(Box::new(sphere_left_inner));
+world.push(Box::new(sphere_right));
+
+// Camera
+let cam = Camera::new(Point3::new(-2.0, 1.0, 1.0),
+                      Point3::new(0.0, 0.0, -1.0),
+                      Vec3::new(0.0, 1.0, 0.0),
+                      20.0,
+                      ASPECT_RATIO);
 
     println!("P3");
     println!("{} {}", IMAGE_WIDTH, IMAGE_HEIGHT);
