@@ -45,8 +45,8 @@ fn main() {
     let mut world = World::new();
     let mat_ground = Arc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
     let mat_center = Arc::new(Lambertian::new(Color::new(0.7, 0.3, 0.3)));
-    let mat_left = Arc::new(Metal::new(Color::new(0.8, 0.8, 0.8)));
-    let mat_right = Arc::new(Metal::new(Color::new(0.8, 0.6, 0.2)));
+    let mat_left = Arc::new(Metal::new(Color::new(0.8, 0.8, 0.8), 0.001));
+    let mat_right = Arc::new(Metal::new(Color::new(0.8, 0.6, 0.2), 1.0));
 
     let sphere_ground = Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, mat_ground);
     let sphere_center = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, mat_center);
