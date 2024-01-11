@@ -96,8 +96,8 @@ fn ray_color(r: &Ray, world: &World, depth: u64) -> Color {
 
 fn main() {
     // Image
-    const ASPECT_RATIO: f64 = 3.0 / 2.0;
-    const IMAGE_WIDTH: u64 = 240;
+    const ASPECT_RATIO: f64 = 9.0 / 16.0;
+    const IMAGE_WIDTH: u64 = 1280;
     const IMAGE_HEIGHT: u64 = ((IMAGE_WIDTH as f64) / ASPECT_RATIO) as u64;
     const SAMPLES_PER_PIXEL: u64 = 50;
     const MAX_DEPTH: u64 = 50;
@@ -106,8 +106,8 @@ fn main() {
     let world = random_scene();
 
     // Camera
-    let lookfrom = Point3::new(13.0, 2.0, 3.0);
-    let lookat = Point3::new(0.0, 0.0, 0.0);
+    let lookfrom = Point3::new(11.0, 2.5, 6.0);
+    let lookat = Point3::new(0.0, -0.5, 0.0);
     let vup = Vec3::new(0.0, 1.0, 0.0);
     let dist_to_focus = 10.0;
     let aperture = 0.1;
@@ -127,7 +127,8 @@ fn main() {
     println!("255");
 
     for j in (0..IMAGE_HEIGHT).rev() {
-        eprintln!("Scanlines remaining: {}", j + 1);
+        eprint!("\rScanlines remaining: {:3}",  j + 1);
+        std::io::Write::flush(&mut std::io::stderr()).unwrap();
 
         let scanline: Vec<Color> = (0..IMAGE_WIDTH)
             .into_par_iter()
