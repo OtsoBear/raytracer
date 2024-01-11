@@ -37,7 +37,7 @@ fn ray_color(r: &Ray, world: &World, depth: u64) -> Color {
 fn main() {
     // Image
     const ASPECT_RATIO: f64 = 16.0 / 9.0;
-    const IMAGE_WIDTH: u64 = 400;
+    const IMAGE_WIDTH: u64 = 4000;
     const IMAGE_HEIGHT: u64 = ((IMAGE_WIDTH as f64) / ASPECT_RATIO) as u64;
     const SAMPLES_PER_PIXEL: u64 = 100;
     const MAX_DEPTH: u64 = 5;
@@ -63,11 +63,21 @@ world.push(Box::new(sphere_left_inner));
 world.push(Box::new(sphere_right));
 
 // Camera
-let cam = Camera::new(Point3::new(-2.0, 1.0, 1.0),
-                      Point3::new(0.0, 0.0, -1.0),
-                      Vec3::new(0.0, 1.0, 0.0),
+let lookfrom = Point3::new(3.0, 3.0, 2.0);
+let lookat = Point3::new(0.0, 0.0, -1.0);
+let vup = Vec3::new(0.0, 1.0, 0.0);
+let dist_to_focus = (lookfrom - lookat).length();
+let aperture = 2.0;
+
+let cam = Camera::new(lookfrom,
+                      lookat,
+                      vup,
                       20.0,
-                      ASPECT_RATIO);
+                      ASPECT_RATIO,
+                      aperture,
+                      dist_to_focus);
+
+
 
     println!("P3");
     println!("{} {}", IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -75,7 +85,7 @@ let cam = Camera::new(Point3::new(-2.0, 1.0, 1.0),
 
     let mut rng = rand::thread_rng();
     for j in (0..IMAGE_HEIGHT).rev() {
-        eprint!("\rScanlines remaining: {:3}", IMAGE_HEIGHT - j - 1);
+        eprint!("\rScanlines remaining: {:3}", j);
         stderr().flush().unwrap();
 
         for i in 0..IMAGE_WIDTH {
