@@ -12,7 +12,6 @@ pub struct HitRecord {
     pub front_face: bool
 }
 
-
 impl HitRecord {
     pub fn set_face_normal(&mut self, r: &Ray, outward_normal: Vec3) -> () {
         self.front_face = r.direction().dot(outward_normal) < 0.0;
@@ -37,8 +36,6 @@ impl Hit for World {
                 tmp_rec = Some(rec);
             }
         }
-
-        
         
         tmp_rec
     }

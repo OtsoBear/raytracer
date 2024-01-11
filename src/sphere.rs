@@ -43,17 +43,16 @@ impl Hit for Sphere {
             }
         }
 
-        let p = r.at(root);
-        let mut rec = HitRecord  {
+        let mut rec = HitRecord {
             t: root,
-            p: p,
+            p: r.at(root),
             mat: self.mat.clone(),
             normal: Vec3::new(0.0, 0.0, 0.0),
-        front_face: false
-    };
+            front_face: false
+        };
 
-    let outward_normal = (rec.p - self.center) / self.radius;
-    rec.set_face_normal(r, outward_normal);
+        let outward_normal = (rec.p - self.center) / self.radius;
+        rec.set_face_normal(r, outward_normal);
 
         Some(rec)
     }
