@@ -14,3 +14,5 @@ cargo run > image.ppm
 ```
 
 This will compile and run the program, generating the ray-traced image.
+
+![Demo picture](Reflection%20demo%20picture.png)

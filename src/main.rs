@@ -99,7 +99,7 @@ fn main() {
     const ASPECT_RATIO: f64 = 9.0 / 16.0;
     const IMAGE_WIDTH: u64 = 1280;
     const IMAGE_HEIGHT: u64 = ((IMAGE_WIDTH as f64) / ASPECT_RATIO) as u64;
-    const SAMPLES_PER_PIXEL: u64 = 50;
+    const SAMPLES_PER_PIXEL: u64 = 300;
     const MAX_DEPTH: u64 = 50;
 
     // World
